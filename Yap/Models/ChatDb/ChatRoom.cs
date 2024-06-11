@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Yap.Models.Chat
+namespace Yap.Models.ChatDb
 {
     public class ChatRoom
     {

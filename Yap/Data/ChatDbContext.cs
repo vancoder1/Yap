@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Yap.Models.Chat;
+using Yap.Models.ChatDb;
 
 namespace Yap.Data
 {

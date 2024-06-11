@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Yap.Models.Chat
+namespace Yap.Models.ChatDb
 {
     public class Message
     {
