@@ -8,7 +8,7 @@ using Yap.Data;
 
 #nullable disable
 
-namespace Yap.Data.Migrations
+namespace Yap.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

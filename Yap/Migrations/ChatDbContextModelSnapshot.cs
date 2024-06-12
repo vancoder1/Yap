@@ -79,7 +79,7 @@ namespace Yap.Migrations
                     b.ToTable("ApplicationUser");
                 });
 
-            modelBuilder.Entity("Yap.Models.Chat.ChatRoom", b =>
+            modelBuilder.Entity("Yap.Models.ChatDb.ChatRoom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,7 +92,7 @@ namespace Yap.Migrations
                     b.ToTable("ChatRooms");
                 });
 
-            modelBuilder.Entity("Yap.Models.Chat.Message", b =>
+            modelBuilder.Entity("Yap.Models.ChatDb.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,14 +124,14 @@ namespace Yap.Migrations
 
             modelBuilder.Entity("Yap.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("Yap.Models.Chat.ChatRoom", null)
+                    b.HasOne("Yap.Models.ChatDb.ChatRoom", null)
                         .WithMany("Users")
                         .HasForeignKey("ChatRoomId");
                 });
 
-            modelBuilder.Entity("Yap.Models.Chat.Message", b =>
+            modelBuilder.Entity("Yap.Models.ChatDb.Message", b =>
                 {
-                    b.HasOne("Yap.Models.Chat.ChatRoom", "ChatRoom")
+                    b.HasOne("Yap.Models.ChatDb.ChatRoom", "ChatRoom")
                         .WithMany("Messages")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -146,7 +146,7 @@ namespace Yap.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Yap.Models.Chat.ChatRoom", b =>
+            modelBuilder.Entity("Yap.Models.ChatDb.ChatRoom", b =>
                 {
                     b.Navigation("Messages");
 

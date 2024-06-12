@@ -9,10 +9,10 @@ using Yap.Data;
 
 #nullable disable
 
-namespace Yap.Data.Migrations
+namespace Yap.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240611191348_Initial")]
+    [Migration("20240612191919_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
