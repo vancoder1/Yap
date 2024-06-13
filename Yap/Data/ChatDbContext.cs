@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Yap.Models;
 using Yap.Models.ChatDb;
 
 namespace Yap.Data
@@ -9,6 +10,7 @@ namespace Yap.Data
             : base(options)
         { }
 
+        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<ChatRoom> ChatRooms { get; set; }
     }

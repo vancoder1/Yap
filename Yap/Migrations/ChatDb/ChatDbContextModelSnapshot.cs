@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yap.Data;
 
 #nullable disable
 
-namespace Yap.Migrations
+namespace Yap.Migrations.ChatDb
 {
     [DbContext(typeof(ChatDbContext))]
-    [Migration("20240611213116_Initial")]
-    partial class Initial
+    partial class ChatDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,15 +22,27 @@ namespace Yap.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ApplicationUserChatRoom", b =>
+                {
+                    b.Property<int>("ChatRoomsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ChatRoomsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ApplicationUserChatRoom");
+                });
+
             modelBuilder.Entity("Yap.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ChatRoomId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -77,9 +86,7 @@ namespace Yap.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatRoomId");
-
-                    b.ToTable("ApplicationUser");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Yap.Models.ChatDb.ChatRoom", b =>
@@ -89,6 +96,14 @@ namespace Yap.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -125,11 +140,19 @@ namespace Yap.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("Yap.Models.ApplicationUser", b =>
+            modelBuilder.Entity("ApplicationUserChatRoom", b =>
                 {
                     b.HasOne("Yap.Models.ChatDb.ChatRoom", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ChatRoomId");
+                        .WithMany()
+                        .HasForeignKey("ChatRoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Yap.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Yap.Models.ChatDb.Message", b =>
@@ -152,8 +175,6 @@ namespace Yap.Migrations
             modelBuilder.Entity("Yap.Models.ChatDb.ChatRoom", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
