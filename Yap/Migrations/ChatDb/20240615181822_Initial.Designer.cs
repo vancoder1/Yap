@@ -12,7 +12,7 @@ using Yap.Data;
 namespace Yap.Migrations.ChatDb
 {
     [DbContext(typeof(ChatDbContext))]
-    [Migration("20240613012946_Initial")]
+    [Migration("20240615181822_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,21 +24,6 @@ namespace Yap.Migrations.ChatDb
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ApplicationUserChatRoom", b =>
-                {
-                    b.Property<int>("ChatRoomsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ChatRoomsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ApplicationUserChatRoom");
-                });
 
             modelBuilder.Entity("Yap.Models.ApplicationUser", b =>
                 {
@@ -89,28 +74,7 @@ namespace Yap.Migrations.ChatDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Yap.Models.ChatDb.ChatRoom", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ChatRooms");
+                    b.ToTable("ApplicationUser");
                 });
 
             modelBuilder.Entity("Yap.Models.ChatDb.Message", b =>
@@ -120,64 +84,48 @@ namespace Yap.Migrations.ChatDb
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChatRoomId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatRoomId");
+                    b.HasIndex("RecipientId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("ApplicationUserChatRoom", b =>
-                {
-                    b.HasOne("Yap.Models.ChatDb.ChatRoom", null)
-                        .WithMany()
-                        .HasForeignKey("ChatRoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Yap.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Yap.Models.ChatDb.Message", b =>
                 {
-                    b.HasOne("Yap.Models.ChatDb.ChatRoom", "ChatRoom")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Yap.Models.ApplicationUser", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Yap.Models.ApplicationUser", "User")
+                    b.HasOne("Yap.Models.ApplicationUser", "Sender")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("ChatRoom");
+                    b.Navigation("Recipient");
 
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Yap.Models.ChatDb.ChatRoom", b =>
-                {
-                    b.Navigation("Messages");
+                    b.Navigation("Sender");
                 });
 #pragma warning restore 612, 618
         }

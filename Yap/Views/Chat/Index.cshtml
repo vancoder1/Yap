@@ -1,0 +1,27 @@
+﻿@using System.Security.Claims
+@model List<Yap.Services.ChatService.ChatDto>
+@{
+    ViewData["Title"] = "Chats";
+}
+@section Scripts {
+    <script src="~/Scripts/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/Scripts/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/Scripts/chat.js"></script>
+}
+<h2>Conversations</h2>
+
+@foreach (var chat in Model)
+{
+    <div>
+        <h3>@chat.Participant.UserName</h3>
+        @foreach (var message in chat.Messages)
+        {
+            <p>
+                <strong>@(message.SenderId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ? "You" : chat.Participant.UserName):</strong>
+                @message.Content
+                <br />
+                <small>@message.Timestamp</small>
+            </p>
+        }
+    </div>
+}

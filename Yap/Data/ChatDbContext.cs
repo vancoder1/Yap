@@ -10,8 +10,23 @@ namespace Yap.Data
             : base(options)
         { }
 
-        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<ChatRoom> ChatRooms { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Recipient)
+                .WithMany()
+                .HasForeignKey(m => m.RecipientId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

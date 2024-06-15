@@ -9,18 +9,20 @@ namespace Yap.Models.ChatDb
         public int Id { get; set; }
 
         [Required]
-        public string Content { get; set; } = string.Empty;
+        public string Content { get; set; } = null!;
 
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
-        public int ChatRoomId { get; set; }
+        [Required]
+        public string SenderId { get; set; } = null!;
 
-        [ForeignKey(nameof(ChatRoomId))]
-        public virtual ChatRoom ChatRoom { get; set; } = null!;
+        [ForeignKey(nameof(SenderId))]
+        public virtual ApplicationUser Sender { get; set; } = null!;
 
-        public string? UserId { get; set; }
+        [Required]
+        public string RecipientId { get; set; } = null!;
 
-        [ForeignKey(nameof(UserId))]
-        public virtual ApplicationUser User { get; set; } = null!;
+        [ForeignKey(nameof(RecipientId))]
+        public virtual ApplicationUser Recipient { get; set; } = null!;
     }
 }

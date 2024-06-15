@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Yap.Data;
 using Yap.Hubs;
 using Yap.Models;
+using Yap.Services;
 
 namespace Yap
 {
@@ -29,6 +30,9 @@ namespace Yap
             // Add SignalR service
             builder.Services.AddSignalR();
 
+            // Add custom services
+            builder.Services.AddScoped<ChatService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -53,11 +57,10 @@ namespace Yap
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=ChatRooms}/{action=Index}/{id?}");
+                pattern: "{controller=Chat}/{action=Index}/{id?}");
             app.MapRazorPages();
 
             // Map SignalR hubs
-            app.MapHub<ChatRoomsHub>("/chatRoomHub");
             app.MapHub<ChatHub>("/chatHub");
 
             app.Run();

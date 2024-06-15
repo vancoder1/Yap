@@ -12,21 +12,7 @@ namespace Yap.Migrations.ChatDb
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ChatRooms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChatRooms", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
+                name: "ApplicationUser",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -47,31 +33,7 @@ namespace Yap.Migrations.ChatDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApplicationUserChatRoom",
-                columns: table => new
-                {
-                    ChatRoomsId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicationUserChatRoom", x => new { x.ChatRoomsId, x.UsersId });
-                    table.ForeignKey(
-                        name: "FK_ApplicationUserChatRoom_ChatRooms_ChatRoomsId",
-                        column: x => x.ChatRoomsId,
-                        principalTable: "ChatRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApplicationUserChatRoom_Users_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_ApplicationUser", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,55 +44,45 @@ namespace Yap.Migrations.ChatDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ChatRoomId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RecipientId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_ChatRooms_ChatRoomId",
-                        column: x => x.ChatRoomId,
-                        principalTable: "ChatRooms",
+                        name: "FK_Messages_ApplicationUser_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "ApplicationUser",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Messages_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
+                        name: "FK_Messages_ApplicationUser_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "ApplicationUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApplicationUserChatRoom_UsersId",
-                table: "ApplicationUserChatRoom",
-                column: "UsersId");
+                name: "IX_Messages_RecipientId",
+                table: "Messages",
+                column: "RecipientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ChatRoomId",
+                name: "IX_Messages_SenderId",
                 table: "Messages",
-                column: "ChatRoomId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Messages_UserId",
-                table: "Messages",
-                column: "UserId");
+                column: "SenderId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApplicationUserChatRoom");
-
-            migrationBuilder.DropTable(
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "ChatRooms");
-
-            migrationBuilder.DropTable(
-                name: "Users");
+                name: "ApplicationUser");
         }
     }
 }

@@ -8,15 +8,5 @@ namespace Yap.Hubs
         {
             await Clients.Group(chatroomName).SendAsync("ReceiveMessage", user, message);
         }
-
-        public Task JoinChatroom(string chatroomName)
-        {
-            return Groups.AddToGroupAsync(Context.ConnectionId, chatroomName);
-        }
-
-        public Task LeaveChatroom(string chatroomName)
-        {
-            return Groups.RemoveFromGroupAsync(Context.ConnectionId, chatroomName);
-        }
     }
 }
